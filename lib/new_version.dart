@@ -1,5 +1,3 @@
-library new_version;
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show Platform;
@@ -147,45 +145,50 @@ class NewVersion {
     );
     final updateButtonTextWidget = Text(updateButtonText);
     final dismissButtonTextWidget = Text(dismissButtonText);
-    dismissAction =
-        dismissAction ?? () => Navigator.of(context, rootNavigator: true).pop();
+    //dismissAction =dismissAction ?? () => Navigator.of(context, rootNavigator: true).pop();
     final updateAction = () {
       _launchAppStore(versionStatus.appStoreLink);
-      Navigator.of(context, rootNavigator: true).pop();
+      //Navigator.of(context, rootNavigator: true).pop();
     };
 
     showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
         return Platform.isAndroid
-            ? AlertDialog(
-                title: dialogTitleWidget,
-                content: dialogTextWidget,
-                actions: <Widget>[
-                  TextButton(
-                    child: dismissButtonTextWidget,
-                    onPressed: dismissAction,
-                  ),
-                  TextButton(
-                    child: updateButtonTextWidget,
-                    onPressed: updateAction,
-                  ),
-                ],
+            ? WillPopScope(
+                onWillPop: () async => false,
+                child: CupertinoAlertDialog(
+                  title: dialogTitleWidget,
+                  content: dialogTextWidget,
+                  actions: <Widget>[
+                    // TextButton(
+                    //   child: dismissButtonTextWidget,
+                    //   onPressed: dismissAction,
+                    // ),
+                    TextButton(
+                      child: updateButtonTextWidget,
+                      onPressed: updateAction,
+                    ),
+                  ],
+                ),
               )
-            : CupertinoAlertDialog(
-                title: dialogTitleWidget,
-                content: dialogTextWidget,
-                actions: <Widget>[
-                  CupertinoDialogAction(
-                    child: dismissButtonTextWidget,
-                    onPressed: dismissAction,
-                  ),
-                  CupertinoDialogAction(
-                    child: updateButtonTextWidget,
-                    onPressed: updateAction,
-                  ),
-                ],
-              );
+            : WillPopScope(
+                onWillPop: () async => false,
+                child: CupertinoAlertDialog(
+                  title: dialogTitleWidget,
+                  content: dialogTextWidget,
+                  actions: <Widget>[
+                    // CupertinoDialogAction(
+                    //   child: dismissButtonTextWidget,
+                    //   onPressed: dismissAction,
+                    // ),
+                    CupertinoDialogAction(
+                      child: updateButtonTextWidget,
+                      onPressed: updateAction,
+                    ),
+                  ],
+                ));
       },
     );
   }
